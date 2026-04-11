@@ -25,6 +25,30 @@ class PdfPreviewScreen extends StatelessWidget {
             ),
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Center(
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: PdfPreview(
         build: (format) => pdfBytes,

@@ -135,6 +135,11 @@ class _HeaderScreenState extends State<HeaderScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: 'العودة',
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('بيانات الامتحان'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -144,14 +149,41 @@ class _HeaderScreenState extends State<HeaderScreen>
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_forward),
-            tooltip: 'العودة',
-            onPressed: () => Navigator.of(context).pop(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Center(
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
+          Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                tooltip: 'القائمة',
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
         ],
       ),
-      drawer: const SessionDrawer(),
+      endDrawer: const SessionDrawer(),
       body: FadeTransition(
         opacity: _fadeAnim,
         child: BlocBuilder<ReportCubit, ReportState>(
@@ -209,14 +241,36 @@ class _HeaderScreenState extends State<HeaderScreen>
                           const Divider(height: 24),
 
                           // Wilaya
-                          TextFormField(
-                            controller: _wilayaController,
-                            decoration: const InputDecoration(
-                              labelText: 'ولاية',
-                              prefixIcon: Icon(Icons.location_city),
-                            ),
-                            onChanged: (v) =>
-                                context.read<ReportCubit>().updateWilaya(v),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return DropdownMenu<String>(
+                                width: constraints.maxWidth,
+                                menuHeight: 300,
+                                initialSelection: AppConstants.algerianWilayas.contains(state.wilaya)
+                                    ? state.wilaya
+                                    : null,
+                                controller: _wilayaController,
+                                enableFilter: true,
+                                enableSearch: true,
+                                requestFocusOnTap: true,
+                                label: const Text('ولاية'),
+                                leadingIcon: const Icon(Icons.location_city),
+                                onSelected: (String? v) {
+                                  if (v != null) {
+                                    _wilayaController.text = v;
+                                    context.read<ReportCubit>().updateWilaya(v);
+                                  }
+                                },
+                                dropdownMenuEntries: AppConstants.algerianWilayas
+                                    .map<DropdownMenuEntry<String>>(
+                                      (String wilaya) => DropdownMenuEntry<String>(
+                                        value: wilaya,
+                                        label: wilaya,
+                                      ),
+                                    )
+                                    .toList(),
+                              );
+                            },
                           ),
                           const SizedBox(height: 16),
 

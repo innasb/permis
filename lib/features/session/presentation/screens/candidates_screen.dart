@@ -119,7 +119,42 @@ class _CandidatesScreenState extends State<CandidatesScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('المترشحون'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Center(
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                tooltip: 'القائمة',
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -135,7 +170,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
           ],
         ),
       ),
-      drawer: const SessionDrawer(),
+      endDrawer: const SessionDrawer(),
       body: BlocBuilder<ReportCubit, ReportState>(
         builder: (context, state) {
           return TabBarView(
