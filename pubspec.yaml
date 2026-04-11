@@ -1,0 +1,51 @@
+name: permis_app
+description: "Algerian driving license exam candidate list PDF generator"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_bloc: ^8.1.6
+
+  # Local storage
+  hive_ce: ^2.6.0
+  hive_ce_flutter: ^2.1.0
+
+  # PDF generation
+  pdf: ^3.11.2
+  printing: ^5.13.4
+
+  # Utilities
+  intl: ^0.20.2
+  path_provider: ^2.1.5
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  hive_ce_generator: ^1.6.0
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+
+  fonts:
+    - family: Amiri
+      fonts:
+        - asset: assets/fonts/Amiri-Regular.ttf
+        - asset: assets/fonts/Amiri-Bold.ttf
+          weight: 700
