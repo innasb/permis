@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:permis_app/core/theme/app_theme.dart';
+import 'package:permis_app/core/router/app_router.dart';
 import 'package:permis_app/features/pdf/presentation/cubits/pdf_cubit.dart';
+import 'package:permis_app/features/session/presentation/cubits/report_cubit.dart';
 import 'package:permis_app/features/session/presentation/cubits/session_history_cubit.dart';
 import 'package:printing/printing.dart';
 
@@ -178,6 +180,36 @@ class SessionDrawer extends StatelessWidget {
                   },
                 );
               },
+            ),
+          ),
+          
+          // New Session Button
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    context.read<ReportCubit>().reset();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRouter.candidates,
+                      (route) => false,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryGreen,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: const Text(
+                    'إنشاء امتحان جديد',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

@@ -143,6 +143,13 @@ class _HeaderScreenState extends State<HeaderScreen>
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.arrow_forward),
+            tooltip: 'العودة',
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
       ),
       drawer: const SessionDrawer(),
       body: FadeTransition(

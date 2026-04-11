@@ -155,33 +155,42 @@ class _CandidatesScreenState extends State<CandidatesScreen>
           );
         },
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Add candidate FAB
-            FloatingActionButton.extended(
-              heroTag: 'add',
-              onPressed: () {
-                final category = _tabController.index == 0 ? 'B' : 'A';
-                _addCandidate(category);
-              },
-              icon: const Icon(Icons.person_add),
-              label: const Text('إضافة مترشح'),
+      floatingActionButton: BlocBuilder<ReportCubit, ReportState>(
+        builder: (context, state) {
+          final hasCandidates = state.totalCandidates > 0;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Add candidate FAB
+                FloatingActionButton.extended(
+                  heroTag: 'add',
+                  onPressed: () {
+                    final category = _tabController.index == 0 ? 'B' : 'A';
+                    _addCandidate(category);
+                  },
+                  icon: const Icon(Icons.person_add),
+                  label: const Text('إضافة مترشح'),
+                ),
+                // Next FAB
+                FloatingActionButton.extended(
+                  heroTag: 'next',
+                  onPressed: hasCandidates
+                      ? () {
+                          Navigator.pushNamed(context, AppRouter.header);
+                        }
+                      : null,
+                  backgroundColor:
+                      hasCandidates ? AppTheme.primaryGreen : Colors.grey.shade400,
+                  elevation: hasCandidates ? 6 : 0,
+                  icon: const Icon(Icons.arrow_back), // Arrow acts as forward in RTL
+                  label: const Text('التالي'),
+                ),
+              ],
             ),
-            // Next FAB
-            FloatingActionButton.extended(
-              heroTag: 'next',
-              onPressed: () {
-                Navigator.pushNamed(context, AppRouter.header);
-              },
-              backgroundColor: AppTheme.primaryGreen,
-              icon: const Icon(Icons.arrow_back), // Arrow back acts as forward in RTL
-              label: const Text('التالي'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
