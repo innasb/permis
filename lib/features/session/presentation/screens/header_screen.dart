@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permis_app/features/pdf/presentation/cubits/pdf_cubit.dart';
-import 'package:printing/printing.dart';
+import 'package:permis_app/features/pdf/presentation/screens/pdf_preview_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:permis_app/core/constants/app_constants.dart';
 import 'package:permis_app/core/theme/app_theme.dart';
@@ -21,6 +21,7 @@ class _HeaderScreenState extends State<HeaderScreen>
   final _dateFormat = DateFormat('yyyy/MM/dd');
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
+  bool _isSuccess = false;
 
   @override
   void initState() {
@@ -95,21 +96,30 @@ class _HeaderScreenState extends State<HeaderScreen>
     if (!mounted) return;
     final pdfState = pdfCubit.state;
     if (pdfState is PdfSuccess) {
-      // Refresh session history
-      await Printing.layoutPdf(
-        onLayout: (_) async => pdfState.bytes,
-      );
+      if (mounted) {
+        setState(() {
+          _isSuccess = true;
+        });
+      }
+
+      await Future.delayed(const Duration(seconds: 1));
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم حفظ التقرير بنجاح'),
-            backgroundColor: AppTheme.primaryGreen,
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PdfPreviewScreen(
+              pdfBytes: pdfState.bytes,
+              title: 'معاينة التقرير',
+            ),
           ),
         );
-        // Reset for new report
-        context.read<ReportCubit>().reset();
-        Navigator.of(context).pop(); // go back to candidates screen or stay
+      }
+
+      if (mounted) {
+        setState(() {
+          _isSuccess = false;
+        });
       }
     } else if (pdfState is PdfError) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -285,22 +295,47 @@ class _HeaderScreenState extends State<HeaderScreen>
                     child: BlocBuilder<PdfCubit, PdfState>(
                       builder: (context, pdfState) {
                         final isLoading = pdfState is PdfLoading;
-                        return ElevatedButton.icon(
-                          onPressed: isLoading ? null : _generatePdf,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.accentRed,
-                            foregroundColor: Colors.white,
-                          ),
-                          icon: isLoading
-                              ? const SizedBox(
-                                  width: 20, height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white, strokeWidth: 2))
-                              : const Icon(Icons.picture_as_pdf),
-                          label: Text(
-                            isLoading ? 'جاري التوليد...' : 'حفظ و توليد PDF',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: _isSuccess
+                              ? Container(
+                                  key: const ValueKey('success'),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primaryGreen,
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(Icons.check,
+                                        color: Colors.white, size: 30),
+                                  ),
+                                )
+                              : ElevatedButton.icon(
+                                  key: const ValueKey('button'),
+                                  onPressed: isLoading ? null : _generatePdf,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppTheme.primaryGreen,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                  ),
+                                  icon: isLoading
+                                      ? const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 2))
+                                      : const Icon(Icons.picture_as_pdf),
+                                  label: Text(
+                                    isLoading
+                                        ? 'جاري التوليد...'
+                                        : 'توليد و معاينة PDF',
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                         );
                       },
                     ),

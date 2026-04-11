@@ -155,32 +155,35 @@ class _CandidatesScreenState extends State<CandidatesScreen>
           );
         },
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Add candidate FAB
-          FloatingActionButton.extended(
-            heroTag: 'add',
-            onPressed: () {
-              final category = _tabController.index == 0 ? 'B' : 'A';
-              _addCandidate(category);
-            },
-            icon: const Icon(Icons.person_add),
-            label: const Text('إضافة مترشح'),
-          ),
-          const SizedBox(height: 12),
-          // Next FAB
-          FloatingActionButton.extended(
-            heroTag: 'next',
-            onPressed: () {
-              Navigator.pushNamed(context, AppRouter.header);
-            },
-            backgroundColor: AppTheme.primaryGreen,
-            icon: const Icon(Icons.arrow_back), // Arrow back acts as forward in RTL
-            label: const Text('التالي'),
-          ),
-        ],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Add candidate FAB
+            FloatingActionButton.extended(
+              heroTag: 'add',
+              onPressed: () {
+                final category = _tabController.index == 0 ? 'B' : 'A';
+                _addCandidate(category);
+              },
+              icon: const Icon(Icons.person_add),
+              label: const Text('إضافة مترشح'),
+            ),
+            // Next FAB
+            FloatingActionButton.extended(
+              heroTag: 'next',
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouter.header);
+              },
+              backgroundColor: AppTheme.primaryGreen,
+              icon: const Icon(Icons.arrow_back), // Arrow back acts as forward in RTL
+              label: const Text('التالي'),
+            ),
+          ],
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

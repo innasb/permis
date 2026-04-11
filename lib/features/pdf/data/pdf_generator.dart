@@ -6,7 +6,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:permis_app/features/session/data/models/report_model.dart';
 
 class PdfGenerator {
-  static const PdfColor _lightGreen = PdfColor.fromInt(0xFFD4EDDA);
+  static const PdfColor _headerColor = PdfColor.fromInt(0xFFEEEEEE);
 
   // Row measurements (must be consistent between table and overlay)
   static const double _headerH = 18;
@@ -260,7 +260,7 @@ class PdfGenerator {
     ];
 
     pw.TableRow headerRow() => pw.TableRow(
-          decoration: const pw.BoxDecoration(color: _lightGreen),
+          decoration: const pw.BoxDecoration(color: _headerColor),
           children: headers.map((h) => _tc(h, cellBoldStyle, _headerH)).toList(),
         );
 
@@ -280,7 +280,7 @@ class PdfGenerator {
     }
 
     pw.TableRow separatorRow() => pw.TableRow(
-          decoration: const pw.BoxDecoration(color: _lightGreen),
+          decoration: const pw.BoxDecoration(color: _headerColor),
           children: List.generate(8, (_) => _tc('', cellBoldStyle, _separatorH)),
         );
 
@@ -397,7 +397,7 @@ class PdfGenerator {
     }).toList();
 
     dataRows.add(pw.TableRow(
-      decoration: const pw.BoxDecoration(color: _lightGreen),
+      decoration: const pw.BoxDecoration(color: _headerColor),
       children: [
         _tc('', cellBoldStyle, 18),
         _tc(totalExamined > 0 ? '$totalExamined' : '', cellBoldStyle, 18),
@@ -414,7 +414,7 @@ class PdfGenerator {
       },
       children: [
         pw.TableRow(
-          decoration: const pw.BoxDecoration(color: _lightGreen),
+          decoration: const pw.BoxDecoration(color: _headerColor),
           children: [
             _tc('عدد المترشحين الناجحين', cellBoldStyle, 18),
             _tc('عدد المترشحين الممتحنين', cellBoldStyle, 18),
